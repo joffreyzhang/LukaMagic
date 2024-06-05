@@ -45,7 +45,6 @@
             margin: 10px 0;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
@@ -88,7 +87,7 @@
         let roomData = [];
 
         // Load the CSV file
-        axios.get('/rooms')
+        axios.get('/q0c.csv')
             .then(response => {
                 roomData = response.data;
             })
