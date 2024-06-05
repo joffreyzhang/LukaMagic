@@ -48,11 +48,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>Room and Telephone Queries</h1>
-    </div>
+  <div class="header">
+    <h1>Zheng Zhang</h1>
+    <p>Student ID: 177455</p>
+  </div>
     <div class="content">
         <!-- Room Query Section -->
+        <img src="DSC_2612.JPG" alt="My Picture">
         <div>
             <label for="roomName">Enter Room Name:</label>
             <input type="text" id="roomName" name="roomName">
@@ -66,6 +68,14 @@
             <label for="newDescription">New Description:</label>
             <input type="text" id="newDescription" name="newDescription">
             <button onclick="updateDescription()">Update Description</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <label for="telnStart">Start Telephone Number:</label>
+          <input type="number" id="telnStart" name="telnStart">
+          <label for="telnEnd">End Telephone Number:</label>
+          <input type="number" id="telnEnd" name="telnEnd">
+          <button onclick="showRoomInfoByTelnRange()">Show Rooms in Range</button>
         </div>
 
         <div class="room-info" id="roomInfo">
@@ -85,6 +95,33 @@
             }
         });
 
+        function showRoomInfoByTelnRange() {
+            const telnStart = parseInt(document.getElementById('telnStart').value, 10);
+            const telnEnd = parseInt(document.getElementById('telnEnd').value, 10);
+            const roomInfoDiv = document.getElementById('roomInfo');
+            roomInfoDiv.innerHTML = '';  // Clear previous results
+
+            const filteredRooms = roomData.filter(room => {
+                const teln = parseInt(room.teln, 10);
+                return teln >= telnStart && teln <= telnEnd;
+            });
+
+            if (filteredRooms.length > 0) {
+                filteredRooms.forEach(room => {
+                    roomInfoDiv.innerHTML += `
+                        <div class="room-card">
+                            <h2>${room.name || 'No information available'}</h2>
+                            <p>Telephone: ${room.teln || 'No information available'}</p>
+                            <p>${room.descript || 'No description available'}</p>
+                            ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
+                        </div>
+                    `;
+                });
+            } else {
+                roomInfoDiv.innerHTML = `<p>No matching information found. Please try again.</p>`;
+            }
+        }
+        
         function showRoomInfo() {
             const roomName = document.getElementById('roomName').value.trim().toLowerCase();
             const roomInfoDiv = document.getElementById('roomInfo');
