@@ -56,8 +56,8 @@
         <!-- Room Query Section -->
         <img src="DSC_2612.JPG" alt="My Picture">
         <div>
-            <label for="roomName">Enter Room Name:</label>
-            <input type="text" id="roomName" name="roomName">
+            <label for="roomNumber">Enter Room Name:</label>
+            <input type="text" id="roomNumber" name="roomNumber">
             <button onclick="showRoomInfo()">Show Room Info</button>
         </div>
 
@@ -123,11 +123,11 @@
         }
         
         function showRoomInfo() {
-            const roomName = document.getElementById('roomName').value.trim().toLowerCase();
+            const roomNumber = document.getElementById('roomNumber').value.trim().toLowerCase();
             const roomInfoDiv = document.getElementById('roomInfo');
             roomInfoDiv.innerHTML = '';  // Clear previous results
 
-            const room = roomData.find(r => r.name.toLowerCase() === roomName);
+            const room = roomData.find(r => r.room === roomNumber);
 
             if (room) {
                 roomInfoDiv.innerHTML = `
