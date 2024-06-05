@@ -48,16 +48,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
-  <div class="header">
-    <h1>Zheng Zhang</h1>
-    <p>Student ID: 177455</p>
-  </div>
+    <div class="header">
+        <h1>Room and Telephone Queries</h1>
+    </div>
     <div class="content">
         <!-- Room Query Section -->
-        <img src="DSC_2612.JPG" alt="My Picture">
         <div>
-            <label for="roomNumber">Enter Room Name:</label>
-            <input type="text" id="roomNumber" name="roomNumber">
+            <label for="roomName">Enter Room Name:</label>
+            <input type="text" id="roomName" name="roomName">
             <button onclick="showRoomInfo()">Show Room Info</button>
         </div>
 
@@ -70,118 +68,30 @@
             <button onclick="updateDescription()">Update Description</button>
         </div>
 
+        <!-- Telephone Range Query Section -->
         <div style="margin-top: 20px;">
-          <label for="telnStart">Start Telephone Number:</label>
-          <input type="number" id="telnStart" name="telnStart">
-          <label for="telnEnd">End Telephone Number:</label>
-          <input type="number" id="telnEnd" name="telnEnd">
-          <button onclick="showRoomInfoByTelnRange()">Show Rooms in Range</button>
+            <label for="telnStart">Start Telephone Number:</label>
+            <input type="number" id="telnStart" name="telnStart">
+            <label for="telnEnd">End Telephone Number:</label>
+            <input type="number" id="telnEnd" name="telnEnd">
+            <button onclick="showRoomInfoByTelnRange()">Show Rooms in Range</button>
         </div>
 
-        <div class="room-info" id="roomInfo">
-            <!-- Room info will be displayed here -->
+        <!-- Add New User Section -->
+        <div style="margin-top: 20px;">
+            <label for="newUserName">New User Name:</label>
+            <input type="text" id="newUserName" name="newUserName">
+            <label for="newUserRoom">Room:</label>
+            <input type="text" id="newUserRoom" name="newUserRoom">
+            <label for="newUserPic">Picture URL:</label>
+            <input type="text" id="newUserPic" name="newUserPic">
+            <label for="newUserTeln">Telephone Number:</label>
+            <input type="number" id="newUserTeln" name="newUserTeln">
+            <label for="newUserDescript">Description:</label>
+            <input type="text" id="newUserDescript" name="newUserDescript">
+            <button onclick="addNewUser()">Add New User</button>
         </div>
-    </div>
 
-    <script>
-        let roomData = [];
-
-        // Load the CSV file
-        axios.get('/q0c.csv')
-            .then(response => {
-                roomData = response.data;
-            })
-            .catch(error => {
-                console.error('Error fetching room data:', error);
-            });
-
-        function showRoomInfoByTelnRange() {
-            const telnStart = parseInt(document.getElementById('telnStart').value, 10);
-            const telnEnd = parseInt(document.getElementById('telnEnd').value, 10);
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';  // Clear previous results
-
-            const filteredRooms = roomData.filter(room => {
-                const teln = parseInt(room.teln, 10);
-                return teln >= telnStart && teln <= telnEnd;
-            });
-
-            if (filteredRooms.length > 0) {
-                filteredRooms.forEach(room => {
-                    roomInfoDiv.innerHTML += `
-                        <div class="room-card">
-                            <h2>${room.name || 'No information available'}</h2>
-                            <p>Telephone: ${room.teln || 'No information available'}</p>
-                            <p>${room.descript || 'No description available'}</p>
-                            ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
-                        </div>
-                    `;
-                });
-            } else {
-                roomInfoDiv.innerHTML = `<p>No matching information found. Please try again.</p>`;
-            }
-        }
-        
-        function showRoomInfo() {
-            const roomNumber = document.getElementById('roomNumber').value.trim().toLowerCase();
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';  // Clear previous results
-
-            const room = roomData.find(r => r.room === roomNumber);
-
-            if (room) {
-                roomInfoDiv.innerHTML = `
-                    <div class="room-card">
-                        <h2>${room.name || 'No information available'}</h2>
-                        <p>Room: ${room.room || 'N/A'}</p>
-                        <p>Telephone: ${room.teln || 'N/A'}</p>
-                        <p>${room.descript || 'No description available'}</p>
-                        ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
-                    </div>
-                `;
-            } else {
-                roomInfoDiv.innerHTML = `<p>Room not found. Please try again.</p>`;
-            }
-        }
-
-        function updateDescription() {
-          const teln = document.getElementById('teln').value.trim();
-          const newDescription = document.getElementById('newDescription').value.trim();
-
-          axios.post('/update-description', { teln, newDescription })
-              .then(response => {
-                  alert('Description updated successfully');
-                    // Optionally refresh data
-                  return axios.get('/q0c.csv');
-              })
-              .then(response => {
-                    oomData = response.data;
-              displayAllRooms();
-            })
-                .catch(error => {
-                    console.error('Error updating description:', error);
-                    alert('Failed to update description');
-                });
-        }
-        
-        
-
-        function displayAllRooms() {
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';
-
-            roomData.forEach(room => {
-                roomInfoDiv.innerHTML += `
-                    <div class="room-card">
-                        <h2>${room.name || 'No information available'}</h2>
-                        <p>Room: ${room.room || 'N/A'}</p>
-                        <p>Telephone: ${room.teln || 'No information available'}</p>
-                        <p>${room.descript || 'No description available'}</p>
-                        ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
-                    </div>
-                `;
-            });
-        }
-    </script>
-</body>
-</html>
+        <!-- Modify User Section -->
+        <div style="margin-top: 20px;">
+            <label for="modifyUserName">Modify
