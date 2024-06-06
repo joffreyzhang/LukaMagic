@@ -69,6 +69,23 @@
             <button onclick="showInfoByCostRange()">Show Info by Cost Range</button>
         </div>
 
+        <div style="margin-top: 20px;">
+            <label for="updateName">Enter Name to Update Description:</label>
+            <input type="text" id="updateName" name="updateName">
+            <label for="newDescription">New Description:</label>
+            <input type="text" id="newDescription" name="newDescription">
+            <button onclick="updateDescription()">Update Description</button>
+        </div>
+
+        <!-- Delete User or Picture Section -->
+        <div style="margin-top: 20px;">
+            <label for="deleteName">Enter Name to Delete User or Picture:</label>
+            <input type="text" id="deleteName" name="deleteName">
+            <button onclick="deleteUser()">Delete User</button>
+            <button onclick="deletePicture()">Delete Picture</button>
+        </div>
+
+
         <div class="info" id="info">
             <!-- Info will be displayed here -->
         </div>
@@ -131,6 +148,48 @@
                 });
             } else {
                 infoDiv.innerHTML = `<p>No matching information found. Please try again.</p>`;
+            }
+        }
+        function updateDescription() {
+            const updateName = document.getElementById('updateName').value.trim().toLowerCase();
+            const newDescription = document.getElementById('newDescription').value.trim();
+            const infoDiv = document.getElementById('info');
+
+            let item = data.find(r => r.name.toLowerCase() === updateName);
+
+            if (item) {
+                item.descript = newDescription;
+                infoDiv.innerHTML = `<p>Description for ${item.name} has been updated.</p>`;
+            } else {
+                infoDiv.innerHTML = `<p>No item found with the name ${updateName}.</p>`;
+            }
+        }
+
+        function deleteUser() {
+            const deleteName = document.getElementById('deleteName').value.trim().toLowerCase();
+            const infoDiv = document.getElementById('info');
+
+            const index = data.findIndex(r => r.name.toLowerCase() === deleteName);
+
+            if (index !== -1) {
+                data.splice(index, 1);
+                infoDiv.innerHTML = `<p>User with the name ${deleteName} has been deleted.</p>`;
+            } else {
+                infoDiv.innerHTML = `<p>No user found with the name ${deleteName}.</p>`;
+            }
+        }
+
+        function deletePicture() {
+            const deleteName = document.getElementById('deleteName').value.trim().toLowerCase();
+            const infoDiv = document.getElementById('info');
+
+            let item = data.find(r => r.name.toLowerCase() === deleteName);
+
+            if (item) {
+                item.pic = '';
+                infoDiv.innerHTML = `<p>Picture for ${item.name} has been deleted.</p>`;
+            } else {
+                infoDiv.innerHTML = `<p>No user found with the name ${deleteName}.</p>`;
             }
         }
     </script>
