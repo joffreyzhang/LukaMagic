@@ -85,6 +85,19 @@
             <button onclick="deletePicture()">Delete Picture</button>
         </div>
 
+        <div style="margin-top: 20px;">
+            <label for="newUserName">Enter New User Name:</label>
+            <input type="text" id="newUserName" name="newUserName">
+            <label for="newUserCost">Enter Cost:</label>
+            <input type="number" id="newUserCost" name="newUserCost">
+            <label for="newUserDescription">Enter Description:</label>
+            <input type="text" id="newUserDescription" name="newUserDescription">
+            <label for="newUserPic">Enter Picture URL:</label>
+            <input type="text" id="newUserPic" name="newUserPic">
+            <button onclick="addNewUser()">Add New User</button>
+        </div>
+
+
 
         <div class="info" id="info">
             <!-- Info will be displayed here -->
@@ -192,6 +205,25 @@
                 infoDiv.innerHTML = `<p>No user found with the name ${deleteName}.</p>`;
             }
         }
+        
+        function addNewUser() {
+            const newUserName = document.getElementById('newUserName').value.trim();
+            const newUserCost = document.getElementById('newUserCost').value.trim();
+            const newUserDescription = document.getElementById('newUserDescription').value.trim();
+            const newUserPic = document.getElementById('newUserPic').value.trim();
+            const infoDiv = document.getElementById('info');
+
+            const newUser = {
+                name: newUserName,
+                cost: newUserCost,
+                descript: newUserDescription,
+                pic: newUserPic
+            };
+
+            data.push(newUser);
+            infoDiv.innerHTML = `<p>New user ${newUserName} has been added.</p>`;
+        }
+
     </script>
 </body>
 </html>
