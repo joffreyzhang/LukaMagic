@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room and Telephone Queries</title>
+    <title>Name Query</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,156 +24,79 @@
         .content {
             padding: 20px;
         }
-        .room-info {
+        .info {
             margin-top: 20px;
         }
-        .room-info img {
+        .info img {
             max-width: 100%;
             height: auto;
         }
-        .room-card {
+        .info-card {
             border: 1px solid #ccc;
             padding: 10px;
             margin: 10px;
             background-color: #fff;
             text-align: left;
         }
-        .room-card img {
+        .info-card img {
             max-width: 100px;
             height: auto;
             display: block;
             margin: 10px 0;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>Zheng Zhang 177455</h1>
-    </div>
+  <div class="header">
+    <h1>Zheng Zhang</h1>
+    <p>Student ID: 177455</p>
+  </div>
     <div class="content">
-        <!-- Room Query Section -->
-        <img src="DSC_2612.JPG" alt="My Picture">
+        <!-- Name Query Section -->
+        <img src="DSC_2612.JPG" alt="My picture">
         <div>
-            <label for="roomNumber">Enter Room Name:</label>
-            <input type="text" id="roomNumber" name="roomNumber">
-            <button onclick="showRoomInfo()">Show Room Info</button>
+            <label for="nameInput">Enter Name:</label>
+            <input type="text" id="nameInput" name="nameInput">
+            <button onclick="showInfo()">Show Info</button>
         </div>
 
-        <!-- Telephone Query Section -->
-        <div style="margin-top: 20px;">
-            <label for="teln">Enter Telephone Number:</label>
-            <input type="number" id="teln" name="teln">
-            <label for="newDescription">New Description:</label>
-            <input type="text" id="newDescription" name="newDescription">
-            <button onclick="updateDescription()">Update Description</button>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <label for="telnStart">Start Telephone Number:</label>
-          <input type="number" id="telnStart" name="telnStart">
-          <label for="telnEnd">End Telephone Number:</label>
-          <input type="number" id="telnEnd" name="telnEnd">
-          <button onclick="showRoomInfoByTelnRange()">Show Rooms in Range</button>
-        </div>
-
-        <div class="room-info" id="roomInfo">
-            <!-- Room info will be displayed here -->
+        <div class="info" id="info">
+            <!-- Info will be displayed here -->
         </div>
     </div>
 
     <script>
-        let roomData = [];
+        let data = [];
 
         // Load the CSV file
-        Papa.parse('/q0c.csv', {
+        Papa.parse('/mnt/data/q1x.csv', {
             download: true,
             header: true,
             complete: function(results) {
-                roomData = results.data;
+                data = results.data;
             }
         });
 
-        function showRoomInfoByTelnRange() {
-            const telnStart = parseInt(document.getElementById('telnStart').value, 10);
-            const telnEnd = parseInt(document.getElementById('telnEnd').value, 10);
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';  // Clear previous results
+        function showInfo() {
+            const nameInput = document.getElementById('nameInput').value.trim().toLowerCase();
+            const infoDiv = document.getElementById('info');
+            infoDiv.innerHTML = '';  // Clear previous results
 
-            const filteredRooms = roomData.filter(room => {
-                const teln = parseInt(room.teln, 10);
-                return teln >= telnStart && teln <= telnEnd;
-            });
+            const item = data.find(r => r.name.toLowerCase() === nameInput);
 
-            if (filteredRooms.length > 0) {
-                filteredRooms.forEach(room => {
-                    roomInfoDiv.innerHTML += `
-                        <div class="room-card">
-                            <h2>${room.name || 'No information available'}</h2>
-                            <p>Telephone: ${room.teln || 'No information available'}</p>
-                            <p>${room.descript || 'No description available'}</p>
-                            ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
-                        </div>
-                    `;
-                });
-            } else {
-                roomInfoDiv.innerHTML = `<p>No matching information found. Please try again.</p>`;
-            }
-        }
-        
-        function showRoomInfo() {
-            const roomNumber = document.getElementById('roomNumber').value.trim().toLowerCase();
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';  // Clear previous results
-
-            const room = roomData.find(r => r.room === roomNumber);
-
-            if (room) {
-                roomInfoDiv.innerHTML = `
-                    <div class="room-card">
-                        <h2>${room.name || 'No information available'}</h2>
-                        <p>Room: ${room.room || 'N/A'}</p>
-                        <p>Telephone: ${room.teln || 'N/A'}</p>
-                        <p>${room.descript || 'No description available'}</p>
-                        ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
+            if (item) {
+                infoDiv.innerHTML = `
+                    <div class="info-card">
+                        <h2>${item.name || 'No information available'}</h2>
+                        <p>Cost: ${item.cost || 'N/A'}</p>
+                        <p>${item.descript || 'No description available'}</p>
+                        ${item.pic ? `<img src="${item.pic}" alt="${item.name}">` : '<p>No picture available</p>'}
                     </div>
                 `;
             } else {
-                roomInfoDiv.innerHTML = `<p>Room not found. Please try again.</p>`;
+                infoDiv.innerHTML = `<p>Item not found. Please try again.</p>`;
             }
-        }
-
-        function updateDescription() {
-            const teln = document.getElementById('teln').value.trim();
-            const newDescription = document.getElementById('newDescription').value.trim();
-            const roomInfoDiv = document.getElementById('roomInfo');
-
-            let room = roomData.find(r => r.teln === teln);
-
-            if (room) {
-                room.descript = newDescription;
-                displayAllRooms();
-                alert(`Description for telephone number ${teln} has been updated.`);
-            } else {
-                alert(`No room found with telephone number ${teln}.`);
-            }
-        }
-
-        function displayAllRooms() {
-            const roomInfoDiv = document.getElementById('roomInfo');
-            roomInfoDiv.innerHTML = '';
-
-            roomData.forEach(room => {
-                roomInfoDiv.innerHTML += `
-                    <div class="room-card">
-                        <h2>${room.name || 'No information available'}</h2>
-                        <p>Room: ${room.room || 'N/A'}</p>
-                        <p>Telephone: ${room.teln || 'No information available'}</p>
-                        <p>${room.descript || 'No description available'}</p>
-                        ${room.pic ? `<img src="${room.pic}" alt="${room.name}">` : '<p>No picture available</p>'}
-                    </div>
-                `;
-            });
         }
     </script>
 </body>
