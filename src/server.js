@@ -11,7 +11,7 @@ app.use(express.static('public')); // Serve static files (HTML, CSS, JS)
 
 // Endpoint to get room data
 app.get('/rooms', (req, res) => {
-    fs.readFile('/q0c.csv', 'utf8', (err, data) => {
+    fs.readFile('q0c.csv', 'utf8', (err, data) => {
         if (err) {
             return res.status(500).send('Error reading CSV file');
         }
@@ -24,7 +24,7 @@ app.get('/rooms', (req, res) => {
 app.post('/update-description', (req, res) => {
     const { teln, newDescription } = req.body;
 
-    fs.readFile('/q0c.csv', 'utf8', (err, data) => {
+    fs.readFile('q0c.csv', 'utf8', (err, data) => {
         if (err) {
             return res.status(500).send('Error reading CSV file');
         }
@@ -74,7 +74,7 @@ app.post('/add-user', (req, res) => {
 app.post('/delete-user', (req, res) => {
     const { name } = req.body;
 
-    fs.readFile('/q0c.csv', 'utf8', (err, data) => {
+    fs.readFile('q0c.csv', 'utf8', (err, data) => {
         if (err) {
             return res.status(500).send('Error reading CSV file');
         }
@@ -83,7 +83,7 @@ app.post('/delete-user', (req, res) => {
         const filteredData = jsonData.data.filter(room => room.name.toLowerCase() !== name.toLowerCase());
 
         const csv = Papa.unparse(filteredData);
-        fs.writeFile('/q0c.csv', csv, 'utf8', (err) => {
+        fs.writeFile('q0c.csv', csv, 'utf8', (err) => {
             if (err) {
                 return res.status(500).send('Error writing to CSV file');
             }
