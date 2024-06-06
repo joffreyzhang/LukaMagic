@@ -61,6 +61,14 @@
             <button onclick="showInfo()">Show Info</button>
         </div>
 
+        <div style="margin-top: 20px;">
+            <label for="costStart">Enter Start Cost:</label>
+            <input type="number" id="costStart" name="costStart">
+            <label for="costEnd">Enter End Cost:</label>
+            <input type="number" id="costEnd" name="costEnd">
+            <button onclick="showInfoByCostRange()">Show Info by Cost Range</button>
+        </div>
+
         <div class="info" id="info">
             <!-- Info will be displayed here -->
         </div>
@@ -96,6 +104,33 @@
                 `;
             } else {
                 infoDiv.innerHTML = `<p>Item not found. Please try again.</p>`;
+            }
+        }
+
+        function showInfoByCostRange() {
+            const costStart = parseFloat(document.getElementById('costStart').value);
+            const costEnd = parseFloat(document.getElementById('costEnd').value);
+            const infoDiv = document.getElementById('info');
+            infoDiv.innerHTML = '';  // Clear previous results
+
+            const filteredItems = data.filter(item => {
+                const cost = parseFloat(item.cost);
+                return cost >= costStart && cost <= costEnd;
+            });
+
+            if (filteredItems.length > 0) {
+                filteredItems.forEach(item => {
+                    infoDiv.innerHTML += `
+                        <div class="info-card">
+                            <h2>${item.name || 'No information available'}</h2>
+                            <p>Cost: ${item.cost || 'N/A'}</p>
+                            <p>${item.descript || 'No description available'}</p>
+                            ${item.pic ? `<img src="${item.pic}" alt="${item.name}">` : '<p>No picture available</p>'}
+                        </div>
+                    `;
+                });
+            } else {
+                infoDiv.innerHTML = `<p>No matching information found. Please try again.</p>`;
             }
         }
     </script>
